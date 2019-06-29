@@ -112,6 +112,12 @@ def delete_category(cid):
     category = Category.query.get(cid)
     db.session.delete(category)
     db.session.commit()
+    db.session.flush()
+    # 删除分类也会删除分类下的所有文章
+    articles = category.articles
+    for article in articles:
+        db.session.delete(article)
+        db.session.commit()
     categories = Category.query.all()
     return render_template('admin/category.html', categories=categories)
 
@@ -127,8 +133,11 @@ def add_article():
         article.title = request.form.get("title")
         article.text = request.form.get("content")
         article.tags = request.form.get("tags")
+        article.comment_count = 0
         article.category_id = request.form.get("category")
         article.date = datetime.datetime.now()
+        checkbox = request.form.get('checkbox[]')
+        print(checkbox)
         try:
             db.session.add(article)
             db.session.commit()
@@ -153,6 +162,7 @@ def update_article(aid):
         article.category_id = request.form.get('category')
         article.tags = request.form.get('tags')
         article.date = datetime.datetime.now()
+        print(article.date)
         article.comment_count = 0  # 如果不给默认值会为None
         try:
             db.session.commit()
@@ -174,5 +184,28 @@ def delete_article(aid):
     article = Article.query.get(aid)
     db.session.delete(article)
     db.session.commit()
+    articles = Article.query.all()
+    return render_template('admin/article.html',articles=articles)
+
+
+# 批量删除复选框中选中的文章
+@blue2.route('/admin/deleteSelect/',methods=['GET','POST'])
+def delete_select():
+    username = session.get("username",'')
+    if username == '':
+        return render_template('admin/login.html')
+    if request.method == "POST":
+        check_box = request.form.getlist("checkbox[]")
+        for index in check_box:
+            article = Article.query.get(int(index))
+            db.session.delete(article)
+            db.session.commit()
+        articles = Article.query.all()
+        return render_template('admin/article.html',articles=articles)
+        # print(check_box,type(check_box))
+
+    # article = Article.query.get(aid)
+    # db.session.delete(article)
+    # db.session.commit()
     articles = Article.query.all()
     return render_template('admin/article.html',articles=articles)

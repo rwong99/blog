@@ -106,7 +106,7 @@
             </div>
             <div class="form-group">
               <label for="article-content" class="sr-only">内容</label>
-              <script id="article-content" name="content" type="text/plain">{{ article.text }}</script>
+              <script id="article-content" name="content" type="text/plain">{{ article.text|striptags }}</script>
             </div>
             <div class="add-article-box">
               <h2 class="add-article-box-title"><span>关键字</span></h2>
@@ -130,11 +130,19 @@
               <div class="add-article-box-content">
                 <ul class="category-list">
                     {% for category in categories %}
-                        <li>
-                            <label>
-                            <input name="category" type="radio" value="1">{{ category.name }}<em class="hidden-md">
-                                ( 栏目ID: <span>{{ category.id }}</span> )</em></label>
-                        </li>
+                        {% if article.c.id == category.id %}
+                            <li>
+                                <label>
+                                <input name="category" type="radio" value="{{ category.id }}" checked>{{ category.name }}<em class="hidden-md">
+                                    ( 栏目ID: <span>{{ category.id }}</span> )</em></label>
+                            </li>
+                            {% else %}
+                            <li>
+                                <label>
+                                <input name="category" type="radio" value="{{ category.id }}">{{ category.name }}<em class="hidden-md">
+                                    ( 栏目ID: <span>{{ category.id }}</span> )</em></label>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
               </div>

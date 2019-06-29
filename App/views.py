@@ -9,44 +9,48 @@ from App.models import *
 blue = Blueprint('blog', __name__)
 
 
-
-
 # 首页
 @blue.route('/')
 def index():
-    articles = Article.query.all()
-    categories = Category.query.all()
-    return render_template('blog/index.html', articles=articles, categories=categories)
-
-@blue.route('/paginate/<int:page>/')
-def paginate(page):
-    page = page
-    per_page = 5
+    # 分页
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 4))
     p = Article.query.paginate(page, per_page, False)
     articles = p.items
-    return render_template('blog/index.html', articles=articles, p=p)
-
-# @blue.route('/getarticle/')
-# def get_article():
-#     articles = Article.query.all()
-#     return render_template('blog/index.html', articles=articles)
+    categories = Category.query.all()
+    return render_template('blog/index.html', articles=articles, categories=categories, p=p)
 
 
+# 首页分页
+@blue.route('/<int:page>/')
+def paginate(page):
+    page = page
+    per_page = int(request.args.get('per_page', 4))
+    p = Article.query.paginate(page, per_page, False)
+    articles = p.items
+    categories = Category.query.all()
+    return render_template('blog/index.html', articles=articles, categories=categories, p=p)
 
-
-
-# 每个分类下的文章列表
-# @blue.route('/list/<int:cid>/')
-# def list(cid):
-#     articles = Article.query.filter_by(category_id=cid)
-#     categorys = Category.query.all()
-#     return render_template('blog/list.html', articles=articles, categorys=categorys)
 
 @blue.route('/list/<int:cid>/')
 def list(cid):
     articles = Article.query.filter_by(category_id=cid)
     categorys = Category.query.all()
-    return render_template('blog/list.html',  articles= articles, categorys=categorys)
+    return render_template('blog/list.html', articles=articles, categorys=categorys)
+
+# 每个分类下的分页
+@blue.route('/list/<int:cid>/<int:page>/')
+def list_paginate(cid, page):
+    page = page
+    per_page = int(request.args.get('per_page', 4))
+    # p = Article.query.paginate(page, per_page, False)
+    # articles = p.items
+    articles = Article.query.filter_by(category_id=cid)
+    p = articles.paginate(page, per_page, False)
+    articles = p.items
+    categorys = Category.query.all()
+    return render_template('blog/list.html', articles=articles, categorys=categorys,p=p)
+
 
 @blue.route('/info/')
 def info():
@@ -54,20 +58,24 @@ def info():
     categorys = Category.query.all()
     return render_template('blog/info.html', article=article, categorys=categorys)
 
+
 @blue.route('/infopic/')
 def infopic():
     categorys = Category.query.all()
     return render_template('blog/infopic.html', categorys=categorys)
+
 
 @blue.route('/gbook/')
 def gbook():
     categorys = Category.query.all()
     return render_template('blog/gbook.html', categorys=categorys)
 
+
 @blue.route('/about/')
 def about():
     categorys = Category.query.all()
     return render_template('blog/about.html', categorys=categorys)
+
 
 @blue.route('/share/')
 def share():

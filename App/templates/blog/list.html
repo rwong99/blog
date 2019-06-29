@@ -105,16 +105,26 @@
                 <p>{{ article.text|striptags }}</p>
             </li>
         {% endfor %}
+{#    分页  #}
+{#    <ul class="btns">#}
+{#            {% for n in range(1, p.pages + 1) %}#}
+{#                <a href="{{ url_for('blog.list_paginate',cid=articles,page=n ) }}">#}
+{#                    <li>#}
+{#                        {{ n }}#}
+{#                    </li>#}
+{#                </a>#}
+{#            {% endfor %}#}
+{#        </ul>#}
 
-        <div class="pagelist"><a class="allpage"><b>99</b></a>&nbsp;&nbsp;<a href="#"
-                                                                             class="curPage">1</a>&nbsp;&nbsp;<a
-                href="#" onclick="page(2)">2</a>&nbsp;&nbsp;<a href="#" onclick="page(3)">3</a>&nbsp;&nbsp;<a href="#"
-                                                                                                              onclick="page(4)">4</a>&nbsp;&nbsp;<a
-                href="#" onclick="page(5)">5</a>&nbsp;&nbsp;<a href="#" onclick="page(6)">6</a>&nbsp;&nbsp;<a href="#"
-                                                                                                              onclick="page(7)">7</a>&nbsp;&nbsp;<a
-                href="#" onclick="page(8)">8</a>&nbsp;&nbsp;<a href="#" onclick="page(9)">9</a>&nbsp;&nbsp;<a href="#"
-                                                                                                              onclick="page(2)">下一页</a>
-        </div>
+{#        <div class="pagelist"><a class="allpage"><b>99</b></a>&nbsp;&nbsp;<a href="#"#}
+{#                                                                             class="curPage">1</a>&nbsp;&nbsp;<a#}
+{#                href="#" onclick="page(2)">2</a>&nbsp;&nbsp;<a href="#" onclick="page(3)">3</a>&nbsp;&nbsp;<a href="#"#}
+{#                                                                                                              onclick="page(4)">4</a>&nbsp;&nbsp;<a#}
+{#                href="#" onclick="page(5)">5</a>&nbsp;&nbsp;<a href="#" onclick="page(6)">6</a>&nbsp;&nbsp;<a href="#"#}
+{#                                                                                                              onclick="page(7)">7</a>&nbsp;&nbsp;<a#}
+{#                href="#" onclick="page(8)">8</a>&nbsp;&nbsp;<a href="#" onclick="page(9)">9</a>&nbsp;&nbsp;<a href="#"#}
+{#                                                                                                              onclick="page(2)">下一页</a>#}
+{#        </div>#}
     </main>
 </article>
 <footer>

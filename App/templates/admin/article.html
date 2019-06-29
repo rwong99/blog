@@ -96,7 +96,7 @@
       </ul>
     </aside>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
-      <form action="/Article/checkAll" method="post" >
+      <form action="{{ url_for('admin.delete_select') }}" method="post" >
         <h1 class="page-header">操作</h1>
         <ol class="breadcrumb">
           <li><a href="{{ url_for('admin.add_article') }}">增加文章</a></li>
@@ -118,7 +118,7 @@
             <tbody>
               {% for article in articles %}
                   <tr>
-                    <td><input type="checkbox" class="input-control" name="checkbox[]" value="" /></td>
+                    <td><input type="checkbox" class="input-control" name="checkbox[]" value="{{ article.id }}" /></td>
                     <td class="article-title">{{ article.title }}</td>
                     <td>{{ article.c.name }}</td>
                     <td class="hidden-sm">{{ article.tags }}</td>
