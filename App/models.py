@@ -23,3 +23,10 @@ class User(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(10))
+
+class LoginInfo(db.Model):
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    ip = db.Column(db.String(20))
+    name = db.Column(db.String(20))
+    last_login_time = db.Column(db.DateTime)
+    login_count = db.Column(db.Integer, default=1)

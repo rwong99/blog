@@ -13,9 +13,11 @@ blue2 = Blueprint('admin', __name__)
 @blue2.route('/admin/')
 def index():
     username = session.get('username', '')
+    ip = request.remote_addr
+    login_info = LoginInfo.query.filter_by(ip=ip).first()
     if username == '':
         return render_template('admin/login.html')
-    return render_template('admin/index.html')
+    return render_template('admin/index.html', login_info=login_info)
 
 # 登录
 @blue2.route('/admin/login/', methods=['GET', 'POST'])
@@ -24,10 +26,30 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('userpwd')
+
         print('*'*50)
         if username=='admin' and password == '123456':
             session['username'] = username
-            return render_template('admin/index.html', username=username)
+            ip = request.remote_addr
+            login_info = LoginInfo.query.filter_by(ip=ip).first()
+            if login_info:
+                print(login_info, login_info.name)
+                login_info.name = username
+                login_count = login_info.login_count
+                login_count += 1
+                login_info.login_count = login_count
+                login_info.last_login_time = datetime.datetime.now()
+                db.session.commit()
+            else:
+                login_info = LoginInfo()
+                login_info.name = username
+                login_info.ip = ip
+                login_info.login_count = 1
+                login_info.last_login_time = datetime.datetime.now()
+                db.session.add(login_info)
+                db.session.commit()
+
+            return render_template('admin/index.html', username=username, login_info=login_info)
         return "用户名或密码错误"
     return render_template('admin/login.html')
 
@@ -51,6 +73,7 @@ def get_notice():
     username = session.get('username', '')
     if username == '':
         return render_template('admin/login.html')
+
     return render_template('admin/notice.html')
 
 @blue2.route('/admin/comment/')
